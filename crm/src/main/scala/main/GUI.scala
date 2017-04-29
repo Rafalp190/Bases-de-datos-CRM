@@ -11,7 +11,11 @@ import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{Stops, LinearGradient}
 import scalafx.scene.text.Text
 
+
 object GUI extends JFXApp {
+  
+  val test = new nonrel.twitInteractions
+  test.tweet("Sup Bitches")
 
   stage = new PrimaryStage {
     title = "ScalaFX Hello World"
