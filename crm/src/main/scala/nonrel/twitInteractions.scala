@@ -29,14 +29,7 @@ class twitInteractions{
  * -Must check Tweet isnt already on DB (USING TWEET ID)
  * 
  */
-def mongoTweets(handle: String): Unit = {
-    val client = TwitterRestClient()
-    val result = client.userTimelineForUser(handle, 2).map { tweetData =>
-      val tweets: Seq[Tweet] = tweetData.data
-      val insertContent = tweets.foreach{
-        //val doc: Document = Document("_id" -> id_str, "handle"-> contributors.screen_name, "content" -> text, "location" -> coordinates.coordinates, 
-        //    "entities" -> Document(entities), "favorites" -> favorite_count)
-        println(id_str)
+
       }
     }
   }

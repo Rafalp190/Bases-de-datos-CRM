@@ -17,23 +17,8 @@ import org.mongodb.scala._
 
 object GUI extends JFXApp {
   
-  //Instanciacion del TwitterRest API twitInteractions.scala
-  val test = new nonrel.twitInteractions
-  test.mongoTweets("garnluzcglp")
-  //val mongoClient: MongoClient = MongoClient()
-  //val database: MongoDatabase = mongoClient.getDatabase("db")
-  //val collection: MongoCollection[Document] = database.getCollection("twitter");
-  //val doc: Document = Document("_id" -> 1, "name" -> "MongoDB", "type" -> "database",
-  //                                "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
-      
-  // val observable: Observable[Completed] = collection.insertOne(doc)
-  /*
-  observable.subscribe(new Observer[Completed] {    
-    override def onNext(result: Completed): Unit = println("Inserted")
-    override def onError(e: Throwable): Unit = println("Failed")
-    override def onComplete(): Unit = println("Completed")
-  })
-  */  
+
+
   stage = new PrimaryStage {
     title = "ScalaFX Hello World"
     scene = new Scene {
@@ -65,6 +50,6 @@ object GUI extends JFXApp {
       }
     }
   }
-    //mongoClient.close()
+
     
 }
