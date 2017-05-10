@@ -1,6 +1,7 @@
 
 package main
 
+import scalafx.Includes._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -10,46 +11,63 @@ import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{Stops, LinearGradient}
 import scalafx.scene.text.Text
+import scalafx.scene.control._
+import scalafx.scene.layout._
+import javafx.scene.control.ScrollPane
 import org.mongodb.scala._
 
 
 
 
 object GUI extends JFXApp {
-  
-
-
   stage = new PrimaryStage {
-    title = "ScalaFX Hello World"
-    scene = new Scene {
-      fill = Black
-      content = new HBox {
-        padding = Insets(20)
-        children = Seq(
-          new Text {
-            text = "Hello "
-            style = "-fx-font-size: 48pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(PaleGreen, SeaGreen))
-          },
-          new Text {
-            text = "World!!!"
-            style = "-fx-font-size: 48pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(Cyan, DodgerBlue)
-            )
-            effect = new DropShadow {
-              color = DodgerBlue
-              radius = 25
-              spread = 0.25
-            }
-          }
-        )
-      }
+    title = "GUI"
+    scene = new Scene (600,360){  
+      fill = Grey  
+      val tabPane = new TabPane
+      
+      val tab2 = new Tab
+      tab2.text = "Estadisticas"
+
+
+
+      tabPane += clientTab()
+     // tabPane.tabs += editClient()
+    //  tabPane.tabs += newClient()    
+
+      val borderPane = new BorderPane
+      borderPane.top = tabPane
+
+      root = borderPane
+
     }
   }
+//private def editClient():Tab{
 
+// }
+//private def newClient():Tab{
+
+// }
+
+  def clientTab() : Tab = {
+
+    val border = new BorderPane
+    val searchText = new TextField
+    searchText.text = "Search by ID"
+    val list = new TilePane
+    for(i <- 1 to 10) list.children +=  new Button("...") 
     
+    border.left = new ListView( List("1","2","3"))
+    border.top = searchText
+    border.right = list
+    val tab = new Tab
+    tab.text = "Client"
+ 
+
+
+
+    tab.content = new ScrollPane(border) 
+    tab
+  }
+
 }
