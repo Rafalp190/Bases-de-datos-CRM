@@ -1,14 +1,19 @@
 package nonrel
 import com.danielasfregola.twitter4s.TwitterRestClient
-import com.danielasfregola.twitter4s.entities.Tweet
+import com.danielasfregola.twitter4s.entities.{HashTag, Tweet}
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 import org.mongodb.scala._
+
 
 
 /**
  * @author Rafa
  *Class that contains all the twitter interaction methods
  */
-class twitInteractions{
+class tweetInteractions{
  
  /**
  * Basic Test function, makes a tweet to check if connected
