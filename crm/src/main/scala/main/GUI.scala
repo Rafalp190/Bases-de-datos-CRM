@@ -256,9 +256,11 @@ object GUI extends JFXApp {
     searchTextTwt.text = ""
     }
 
+    val orderBox = new HBox
+
     val searchTwtBar = new HBox
 
-    val searchTwt = new HBox
+    val searchTwt = new VBox
 
     val handleBox = new VBox
 
@@ -268,10 +270,14 @@ object GUI extends JFXApp {
 
     val dBox = new VBox
 
+    val indexBox = new VBox
+
+    val lolBox = new HBox
+
     val searchIf = new Button("Search")
     searchIf.onAction = (e:ActionEvent) => {
       val searchTextString = searchText.getText()
-      val handle = "odersky" 
+      val handle = "jack" 
       if(searchTextString == handle){
         tweetManager.mongoInsert(handle,collection)
         val searchConctent = new Button("Search")
@@ -333,11 +339,24 @@ object GUI extends JFXApp {
           style = "-fx-font-size: 15pt"
         }
         
+        val indexTwt = tweetManager.impact(handle, collection)
+        val indText1 = new Text("Favorites: " ++ indexTwt._1._1.toString)
+        val indText2 = new Text("Retweets: " ++ indexTwt._1._2.toString)
+        val impactText = new Text("Impact Index" ++ indexTwt._2.toString)
+        val impactLabel = new Text{
+          text = "Impact Data:"
+          style = "-fx-font-size: 15pt"
+        }
+
+
+        indexBox.children = List(impactLabel, indText1, indText2, impactText)
         dBox.children = List(labelDailyTwt, dtwtView)
         hashBox.children = List(labelHash, hashView)
         mentionBox.children = List(labelmentions,mentionView)
         searchTwtBar.children = List(searchTextTwt, searchConctent)
-        searchTwt.children = List(mentionBox, hashBox, dBox, searchTwtBar,handleBox )
+        orderBox.children = List(mentionBox, hashBox, dBox)
+        lolBox.children = List(searchTwtBar, handleBox)
+        searchTwt.children = List( lolBox, indexBox, orderBox)
      }
     }
          
