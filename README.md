@@ -17,13 +17,18 @@ Proyecto 2 Bases de Datos 2017
 - Descargar el Repositorio 
   https://github.com/Rafalp190/Bases-de-datos-CRM
 
-## Inicializacion
-- Abrir un cmd
+## Inicializacion 
+ - Abrir un cmd
+ - Dirigirse a la carpeta de su instalacion de MongoDB
+ -Escribir:
+ `mongod`
+ 
 - CD al directorio del proyecto en
-  */Bases-de-datos-CRM/crm/
+  `*/Bases-de-datos-CRM/crm/`
 - Escribir
+  `sbt run`
 
+  -Esperar a que el proyecto descargue Scala y todas las dependencias
+  -Cuando termine la descarga iniciará el programa
+  
 
-  sbt run
-Esperar a que el proyecto descargue Scala y todas las dependencias
-Cuando termine la descarga iniciará el programa
