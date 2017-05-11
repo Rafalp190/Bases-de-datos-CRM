@@ -11,14 +11,17 @@ lazy val root = (project in file(".")).
     name := "CRM",
 
     libraryDependencies ++= Seq(
-  							"org.scalikejdbc" %% "scalikejdbc"       % "2.5.1",
- 							"com.h2database"  %  "h2"                % "1.4.193",
-  							"ch.qos.logback"  %  "logback-classic"   % "1.2.1",
-  							"org.mongodb.scala" %% "mongo-scala-driver" % "2.0.0",
-  							"org.scalafx" %% "scalafx" % "8.0.102-R11",
-  							scalaTest % Test,
-  							"com.danielasfregola" %% "twitter4s" % "5.1"
-	),
+                "org.scalikejdbc" %% "scalikejdbc"       % "2.5.1",
+                "com.h2database"  %  "h2"                % "1.4.193",
+                "ch.qos.logback"  %  "logback-classic"   % "1.2.1",
+                "org.mongodb.scala" %% "mongo-scala-driver" % "2.0.0",
+                "org.mongodb" %% "casbah" % "3.1.1",
+                "org.scalafx" %% "scalafx" % "8.0.102-R11",
+                scalaTest % Test,
+                "com.danielasfregola" %% "twitter4s" % "5.1",
+                "com.github.wookietreiber" %% "scala-chart" % "latest.integration",
+                "com.github.nscala-time" %% "nscala-time" % "2.16.0"
+),
     
 unmanagedJars in Compile += {
   val ps = new sys.SystemProperties
