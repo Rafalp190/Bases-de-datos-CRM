@@ -17,33 +17,30 @@ import javafx.scene.control.ScrollPane
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.Alert
+import scalafx.geometry.Orientation
 import org.mongodb.scala._
 
 
 
 
+
 object GUI extends JFXApp {
+
+  val mainTabPane = new TabPane
   stage = new PrimaryStage {
     title = "GUI"
-    scene = new Scene (800,500){  
-      val tabPane = new TabPane
-      tabPane += ClientTab()
-     // tabPane.tabs += editClient()
-    //  tabPane.tabs += newClient()    
+    scene = new Scene {  
+      
+      mainTabPane += ClientTab()
+      mainTabPane += EstadisticasTab()
 
       val borderPane = new BorderPane
-      borderPane.top = new ScrollPane(tabPane)
+      borderPane.center = new ScrollPane(mainTabPane)
 
       root = borderPane
 
     }
   }
-//private def EditClient():Tab{
-
-// }
-//private def NewClient():Tab{
-
-// }
 
   def ClientTab() : Tab = {
 
@@ -57,7 +54,6 @@ object GUI extends JFXApp {
       System.out.println("ajua")
     }
 
-
     val list = new TilePane
     for(i <- 1 to 10) {
       val editButton = new Button("...")
@@ -70,16 +66,63 @@ object GUI extends JFXApp {
     val newClient = new Button
     newClient.text = "New Client"
     newClient.onAction = (e:ActionEvent) =>{
-      System.out.println("ajonjoli")
+      mainTabPane += NewClient()
     }
+    val Tabla = new ListView( List("1","2","3"))
 
-    val searchPane = new TilePane 
-    searchPane.children = List(searchText,search,newClient) 
-    border.top = searchPane
-    border.left = new ListView( List("1","2","3")) 
-    border.right = list
+    val searchPane = new SplitPane 
+    searchPane.items ++= List(searchText,search,newClient) 
+
+    val tablaPane = new SplitPane
+    tablaPane.items ++= List(Tabla,list)
+
+    border.right = searchPane
+    border.bottom = tablaPane 
+
     val tab = new Tab
     tab.text = "Client"
+ 
+    tab.content = new ScrollPane(border) 
+    tab
+  }
+
+  def EstadisticasTab() : Tab = {
+    
+    val searchText = new TextField
+    searchText.text = "Search by ID"
+
+    val search = new Button("Search")
+    search.onAction = (e:ActionEvent) => {
+      //agregar el codigo para buscar en la lista
+      System.out.println("ajua")
+    }
+
+    val searchPane = new SplitPane
+    searchPane.items ++= List(searchText, search)
+
+    val Tabla = new ListView( List("1","2","3"))
+
+    val tabPane = new TabPane
+
+    val tab1 = new Tab
+    tab1.text = "Estadisticas Racionales"
+
+    val tab2 = new Tab
+    tab2.text = "Twitter"
+
+    tabPane += tab1
+    tabPane += tab2
+
+    val topSplit = new SplitPane
+    topSplit.orientation = Orientation.Vertical
+    topSplit.items ++= List(Tabla, tabPane)
+
+    val border = new BorderPane
+    border.top = searchPane
+    border.center = topSplit
+    
+    val tab = new Tab
+    tab.text = "Estadisticas"
  
     tab.content = new ScrollPane(border) 
     tab
@@ -103,7 +146,9 @@ object GUI extends JFXApp {
 
     result match{
 
-      case Some(`editButton`) => println("edit")
+      case Some(`editButton`) => {
+        mainTabPane += EditClient()
+      }
       
       case Some(`deleteButton`) => DeletePopUp()
 
@@ -131,6 +176,34 @@ object GUI extends JFXApp {
 
     }
     deleteAlert
+  }
+
+  def EditClient(): Tab = {
+    val textField = new TextField
+    textField.text = "nigga"
+
+    val tab = new Tab
+    tab.text = "EditClient"
+ 
+    val border = new BorderPane
+    border.top = textField
+
+    tab.content = new ScrollPane(border)
+    tab
+  }
+
+  def NewClient(): Tab = {
+    val textField = new TextField
+    textField.text = "nigga"
+
+    val tab = new Tab
+    tab.text = "New Client"
+ 
+    val border = new BorderPane
+    border.top = textField
+
+    tab.content = new ScrollPane(border)
+    tab
   }
 
 }
