@@ -18,5 +18,11 @@ lazy val root = (project in file(".")).
   							"org.scalafx" %% "scalafx" % "8.0.102-R11",
   							scalaTest % Test,
   							"com.danielasfregola" %% "twitter4s" % "5.1"
-	)
-  )
+	),
+    
+unmanagedJars in Compile += {
+  val ps = new sys.SystemProperties
+  val jh = ps("java.home")
+  Attributed.blank(file(jh) / "lib/ext/jfxrt.jar")
+  }
+)
