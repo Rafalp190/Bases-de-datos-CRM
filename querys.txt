@@ -1,0 +1,127 @@
+ruta de imagenes: '\src\main\resources\static\pictures\
+
+//autoincremental 
+CREATE SEQUENCE extrafield_id_seq;
+ALTER TABLE extrafield ALTER id SET DEFAULT NEXTVAL('extrafield_id_seq');
+
+
+//Insert
+
+insert into users values (newID, newName, newLastname, newCompanyID, newUserTypeID, newGenderID, newAddresID, newNationalityID, newEthnicidID, newExtrafield, newTwitter, newEmail, newUsername, newPassword, newdate, newdate, newPhoto, newEdad, newActivo)
+
+//DELETE
+Delete FROM users
+where id=deleteID
+
+//Update
+Update users set firstname = newName
+Update users set lastname = NewLastName
+Update users set companyid = newCompany
+Update users set usertypeid = newUserTypeID
+Update users set genderir = newGenderID
+Update users set addresid = newAddresID
+Update users set nationalityid = newNationalityID
+Update users set ethnicid = newEthnicidID
+Update users set extrafieldid = newExtrafield
+Update users set twitter = newTwitter
+Update users set email = newEmail
+Update users set username = newUsername
+Update users set password = newPassword
+Update users set photo = newPhoto
+Update users set edad = newEdad
+update users set activo = newActivo
+
+Update extrafield set fieldname = newFieldName
+Update extrafield set type = newType
+
+/////Triggers/////////////
+Si el cliente esta inactivo desde ya hace 1 año se cambia a False
+trigger1
+
+
+/*************************************HAY QUE ARREGLARLO********************************************/
+Create or Replace Function clienteInactivo() returns trigger as $clienteInactivo$
+	BEGIN
+    	if lastlogin < '2016-1-1' then
+       		update users set activo = False
+        	where id=id and lastlogin < '2016-1-1';
+        end if;
+        return new;
+	END;
+$clienteInactivo$ Language plpgsql;
+
+Create trigger clienteInactio Before Update on users
+	For each row Execute procedure clienteInactio();
+
+
+no se pueden poner clientes debajo de 1900
+trigger 2
+
+Create or Replace Function cliente1900() returns trigger AS $cliente1900$
+	Begin 
+		-- Revisa que la fecha de entrada no sea menor a 1900-1-1 
+		IF New.edad < '1900-1-1' THEN
+			Raise EXCEPTION '% no se puede tener una Fecha de nacimiento antes de 1900', New.edad;
+		END IF;
+		return new;
+	END;
+$cliente1900$ Language plpgsql;
+
+create trigger cliente1900 Before Insert on users
+	For each row Execute procedure cliente1900();
+
+
+no se pueden poner clientes con edad menor a 18
+
+trigger 3
+Create or Replace Function cliente18() returns trigger AS $cliente18$
+	Begin 
+		-- Revisa que la fecha de nacimiento que no sea mayor a  1999-1-1 
+		IF New.edad >= '1999-1-1' THEN
+			Raise EXCEPTION '% no se puede tener a un cliente menor de 18 años', New.edad;
+		END IF;
+		return new;
+	END;
+$cliente18$ Language plpgsql;
+
+create trigger cliente18 before Insert on users
+	For each row Execute procedure cliente18();
+
+Eliminar los extrafields cuando se elimina un cliente
+trigger 4
+
+
+trigger 5
+
+
+trigger 6	
+
+
+trigger 7
+
+
+trigger 8
+
+
+trigger 9
+
+
+trigger 10 
+
+
+///////views//////////////
+////////EJEMPLO///////////
+CREATE VIEW COMPANY_VIEW AS
+SELECT ID, NAME, AGE
+FROM  COMPANY;
+
+Clientes activos 
+
+Clientes no activos
+
+Clientes Hombres
+
+Clientes Mujeres
+
+Clientes por zona
+
