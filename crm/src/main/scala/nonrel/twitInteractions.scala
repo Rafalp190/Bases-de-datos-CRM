@@ -12,6 +12,7 @@ import scalax.chart.api._
 import scalax.chart._
 import java.io.File
 
+
 import com.github.nscala_time.time.Imports._
 /**
  * @author Rafa
@@ -123,6 +124,7 @@ Top Hashtags
     val chart = BarChart(ds)
     if (cleanGraphs("src/main/resources/static/charts/hashtagsChart.jpg")){
       chart.saveAsJPEG("src/main/resources/static/charts/hashtagsChart.jpg")
+      chart.show()
     }
     else {
     chart.saveAsJPEG("src/main/resources/static/charts/hashtagsChart.jpg")
@@ -169,6 +171,7 @@ Top Hashtags
     }
     val chart = BarChart(ds)
     if (cleanGraphs("src/main/resources/static/charts/mentionsChart.jpg")){
+    	chart.show()
       chart.saveAsJPEG("src/main/resources/static/charts/mentionsChart.jpg")
       
     }

@@ -21,7 +21,16 @@ import scalafx.scene.control.Alert
 import scalafx.geometry.Orientation
 import javafx.scene.input.MouseEvent
 import javafx.event.EventHandler
-import org.mongodb.scala._
+import com.mongodb.casbah.Imports._
+import scala.collection.mutable.ListBuffer
+import scalax.chart.api._
+import scalax.chart._
+import java.io.File
+import scalafx.scene.image._
+
+
+
+import com.github.nscala_time.time.Imports._
 
 
 
@@ -30,9 +39,10 @@ import org.mongodb.scala._
 object GUI extends JFXApp {
 
   val mainTabPane = new TabPane
+  
   stage = new PrimaryStage {
     title = "GUI"
-    scene = new Scene {  
+    scene = new Scene(800,600) {  
       
       mainTabPane += ClientTab()
       mainTabPane += EstadisticasTab()
@@ -75,7 +85,7 @@ object GUI extends JFXApp {
     }
 
     val searchPane = new HBox{
-      prefWidth = 600
+      prefWidth = 800
       children = List(searchText,search,newClient)
     } 
     
@@ -97,8 +107,8 @@ object GUI extends JFXApp {
   def EstadisticasTab() : Tab = {
     
      val searchText = new TextField
-    searchText.text = "Search by ID"
-    searchText.onMouseClicked = (e: MouseEvent) =>{
+      searchText.text = "Search by ID"
+      searchText.onMouseClicked = (e: MouseEvent) =>{
       searchText.text = ""
     }
 
@@ -111,11 +121,11 @@ object GUI extends JFXApp {
 
     val searchPane = new HBox{
       children = List(searchText, search)
-      prefWidth = 600
+      prefWidth = 800
     }
      
 
-    val Tabla = new ListView( List("1","2","3"))
+    
 
     val tabPane = new TabPane
 
@@ -126,8 +136,8 @@ object GUI extends JFXApp {
     tabPane += TwitterTab()
 
     val topSplit = new SplitPane
-    topSplit.orientation = Orientation.Vertical
-    topSplit.items ++= List(Tabla, tabPane)
+    topSplit.items ++= List(tabPane)
+    
 
     val border = new BorderPane
     border.top = searchPane
@@ -231,39 +241,112 @@ object GUI extends JFXApp {
     val mongoClient =  MongoClient()
     val db = mongoClient("test")
     val collection = db("twitter")
-    val tweetManager = new nonrel.tweetInteractions
-    val hbox = new HBox{
-      val searchText = new TextField
-      searchText.text = "Search by Twitter Handle"
-      searchText.onMouseClicked = (e: MouseEvent) =>{
-      searchText.text = ""
-      }
+    val tweetManager = new nonrel.twitInteractions
+    
+    
+    val searchText = new TextField
+    searchText.text = "Search by Twitter Handle"
+    searchText.onMouseClicked = (e: MouseEvent) =>{
+    searchText.text = ""
+    }
 
-      val search = new Button("Search")
-      search.onAction = (e:ActionEvent) => {
+    val searchTextTwt = new TextField
+    searchTextTwt.text = "Search Content"
+    searchTextTwt.onMouseClicked = (e: MouseEvent) =>{
+    searchTextTwt.text = ""
+    }
+
+    val searchTwtBar = new HBox
+
+    val searchTwt = new HBox
+
+    val handleBox = new VBox
+
+    val mentionBox = new VBox
+
+    val hashBox = new VBox
+
+    val dBox = new VBox
+
+    val searchIf = new Button("Search")
+    searchIf.onAction = (e:ActionEvent) => {
       val searchTextString = searchText.getText()
       val handle = "odersky" 
-      if(searchTextString == odersky){
-        val searchTwt = new VBox{
-          val valSearchTwt = HBox{
-            val searchTextTwt = new TextField
-            searchTextTwt.text = "Search by Twitter Handle"
-            searchTextTwt.onMouseClicked = (e: MouseEvent) =>{
-            searchTextTwt.text = ""
-            }
-            val search = new Button("Search")
-            search.onAction = (e:ActionEvent) => {
-            val searchTextStringTwt = searchTextTwt.getText()
-            val result = tweetManager.searchTweets(handle,searchTextStringTwt,collection)
-            }
+      if(searchTextString == handle){
+        tweetManager.mongoInsert(handle,collection)
+        val searchConctent = new Button("Search")
+        searchConctent.onAction = (e:ActionEvent) => {
+        val searchTextStringTwt = searchTextTwt.getText()
+        val result = tweetManager.searchTweets(handle,searchTextStringTwt,collection)
+        val resultName = result._1
+        val resultCount = result._2.toString
+        val textResult = new Text{
+          text = ( "You searched for the Term: \n"++ resultName ++ " Found: \n" ++ resultCount ++ " Times")
+          style = "-fx-font-size: 15pt"
           }
+          handleBox.children = List(textResult)
         }
-      }
-      }
+
+        val mentions = tweetManager.topMentions(handle,collection)
+        tweetManager.topMentionPlot(mentions)
+        var mentionListBuffer = new ListBuffer[String]
+        for(mention <- mentions){
+          val mentionResultName = mention._1
+          val mentionResultCoun = mention._2.toString
+          mentionListBuffer += mentionResultName ++ ": " ++ mentionResultCoun
+
+        }
+        val mentionList = mentionListBuffer.toList
+        val mentionView = new ListView(mentionList)
+        val labelmentions = new Text{
+          text = "Users most mentioned"
+          style = "-fx-font-size: 15pt"
+        }
+
+        val mentionsHash = tweetManager.topHashtags(handle,collection)
+        tweetManager.topHashtagPlot(mentionsHash)
+        var hashListBuffer = new ListBuffer[String]
+        for(hastag <- mentionsHash){
+          val hashResultName = hastag._1
+          val hashResultCoun = hastag._2.toString
+          hashListBuffer += hashResultName ++ ": " ++ hashResultCoun
+
+        }
+        val hashList = hashListBuffer.toList
+        val hashView = new ListView(hashList)
+        val labelHash = new Text{
+          text = "Top ten Hashtags"
+          style = "-fx-font-size: 15pt"
+        }
+
+        val Dtwt = tweetManager.dailyTweets(handle,collection)
+        var dtwtBuffer = new ListBuffer[String]
+        for(day <- Dtwt){
+          val daytwt = day._1.toString
+          val doytwt = day._2.toString
+          dtwtBuffer += daytwt ++ ": " ++ doytwt
+        }
+        val dTwtList = dtwtBuffer.toList
+        val dtwtView = new ListView(dTwtList)
+        val labelDailyTwt = new Text{
+          text = "Daily Tweets"
+          style = "-fx-font-size: 15pt"
+        }
+        
+        dBox.children = List(labelDailyTwt, dtwtView)
+        hashBox.children = List(labelHash, hashView)
+        mentionBox.children = List(labelmentions,mentionView)
+        searchTwtBar.children = List(searchTextTwt, searchConctent)
+        searchTwt.children = List(mentionBox, hashBox, dBox, searchTwtBar,handleBox )
+     }
+    }
+         
+    val hbox = new HBox{
+      children = List(searchText, searchIf)
     }
 
     val vbox = new VBox{
-      
+      children = List(hbox, searchTwt)
     }
 
     val tab = new Tab
